@@ -118,33 +118,89 @@ export const pt = {
   },
   gifts: {
     kicker: "Carinho",
-    title: "Lista de presentes simbólicos",
+    title: "Lista de presentes nada convencionais",
     subtitle:
-      "Sua presença já é o maior presente. Se quiser nos presentear, escolha um símbolo abaixo.",
+      "Sua presença já é o maior presente. Mas, se quiser ajudar esse casal cearense-chileno a começar a vida, escolha uma das opções abaixo — todas 100% verdadeiras (quase).",
     choose: "Presentear",
-    items: [
-      {
-        title: "Um brinde ao início",
-        text: "Para a taça erguida no nosso primeiro minuto de casados.",
+    approx: "aprox.",
+    items: {
+      terremoto: {
+        title: "Rodada de terremoto na La Piojera",
+        text: "O drinque chileno de vinho com sorvete de abacaxi que derruba até cabra da peste. A réplica vem inclusa.",
       },
-      { title: "Café da manhã eterno", text: "Para as manhãs sem pressa que queremos repetir sempre." },
-      { title: "Passagem para o próximo destino", text: "Para continuarmos colecionando fusos e paisagens." },
-      { title: "Um pedaço da nossa casa", text: "Para as plantas, os livros e os cantos que nos abrigam." },
-      { title: "Noite estrelada", text: "Para um jantar a dois sob o céu de novembro." },
-      { title: "Surpresa livre", text: "Para você escolher o valor que faz sentido no seu coração." },
-    ],
+      pisco: {
+        title: "Pisco sour diplomático",
+        text: "Para brindar com pisco chileno. Aviso: dizer que o pisco é peruano pode cancelar o casamento.",
+      },
+      palta: {
+        title: "Estoque vitalício de palta",
+        text: "No Chile, abacate vai até no cachorro-quente. Ajude a sustentar esse vício do casal.",
+      },
+      protetor: {
+        title: "Protetor solar FPS 100 para o noivo",
+        text: "Chileno na Beira-Mar ao meio-dia vira camarão em quinze minutos. Presente de utilidade pública.",
+      },
+      guatero: {
+        title: "Kit sobrevivência ao inverno de Santiago",
+        text: "Para a cearense que descobriu que existe 3 °C: guatero (a bolsa de água quente de lá), três pares de meia e uma promessa pro Padim Ciço.",
+      },
+      temblor: {
+        title: "Seguro anti-susto para tremores",
+        text: "Para a noiva parar de correr pra rua a cada tremidinha enquanto o noivo nem levanta do sofá: “tranquila, fue un temblorcito”.",
+      },
+      caranguejo: {
+        title: "Quinta do caranguejo na Praia do Futuro",
+        text: "Para apresentar ao noivo o martelinho, a camisa melada e o conceito de quinta-feira sagrada.",
+      },
+      forro: {
+        title: "Curso intensivo de forró para o noivo",
+        text: "Para o Heins trocar a cueca (a dança chilena, calma!) pelo xote pé de serra sem pisar no pé da noiva.",
+      },
+      rede: {
+        title: "Rede cearense para a sala em Santiago",
+        text: "Sofá é bom, mas cearense só descansa de verdade balançando numa rede. Nem que seja do lado da estufa.",
+      },
+      tradutor: {
+        title: "Tradutor simultâneo cearês ↔ chilenês",
+        text: "Para decifrar quando ele diz “¿cachai, po?” e ela responde “oxe, macho, e eu lá sei?”.",
+      },
+      mala: {
+        title: "Mala extra de rapadura e castanha",
+        text: "Para voltar a Santiago com o Ceará na bagagem e rezar pro SAG (a alfândega chilena) não confiscar tudo.",
+      },
+      luaDeMel: {
+        title: "Lua de mel: de Jeri ao Atacama",
+        text: "Das dunas de Jericoacoara às do deserto mais seco do mundo. Casal com areia no sapato é casal que dura.",
+      },
+    },
+    free: {
+      title: "Valor livre",
+      text: "Nenhum desses te representou, macho? Escolha o valor que quiser e a gente inventa a piada.",
+      action: "Presentear com valor livre",
+    },
     modal: {
       title: "Como presentear",
       subtitle: "Escolha a opção mais confortável para você.",
-      brazil: "Brasil",
-      chile: "Chile",
-      pixLabel: "Chave PIX (CPF)",
-      pixNote: "Copie a chave e finalize no aplicativo do seu banco.",
-      bankTitle: "Transferencia bancaria — Santander",
+      brazil: "Brasil · Pix",
+      chile: "Chile · Santander",
+      amount: "Valor",
+      suggested: "Valor sugerido",
+      freeAmount: "Você escolhe o valor",
+      pixScan: "Abra o app do seu banco, escolha Pix › Ler QR Code e aponte a câmera.",
+      pixCopyPaste: "Pix Copia e Cola",
+      pixLabel: "Chave Pix (CPF)",
+      pixNote: "Está no celular? Copie o código Pix Copia e Cola e cole no app do seu banco.",
+      bankTitle: "Transferência bancária",
+      bank: "Banco",
+      accountTypeLabel: "Tipo de conta",
+      accountType: "Conta corrente",
       holder: "Titular",
       rut: "RUT",
-      account: "Cta Corriente",
+      account: "Número da conta",
       email: "E-mail",
+      copyAll: "Copiar todos os dados",
+      transferNote:
+        "No app do banco, informe o e-mail acima para que o aviso da transferência chegue até nós.",
       copy: "Copiar",
       copied: "Copiado!",
       close: "Fechar",

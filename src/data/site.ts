@@ -13,6 +13,9 @@ export const event = {
 export const payment = {
   brazil: {
     pixKey: "06321365378",
+    /** Nome e cidade de quem recebe, gravados no QR Code Pix (até 25 e 15 caracteres). */
+    receiverName: "Isabel e Heins",
+    city: "Fortaleza",
   },
   chile: {
     bank: "Santander",
@@ -22,6 +25,3 @@ export const payment = {
     email: "heins.powell@gmail.com",
   },
 } as const;
-
-/** Ícones simbólicos (nomes de ícones lucide) para cada card de presente. */
-export const giftIcons = ["Wine", "Coffee", "Plane", "Home", "Stars", "Heart"] as const;
