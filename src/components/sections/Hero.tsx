@@ -1,6 +1,7 @@
 import botanical from "@/assets/botanical-top.png";
 import sunset from "@/assets/sunset-bench.jpg";
 import paper from "@/assets/paper-texture.jpg";
+import { Button } from "@/components/ui/button";
 import { useI18n } from "@/i18n";
 
 export function Hero() {
@@ -27,6 +28,22 @@ export function Hero() {
         height={1024}
         className="pointer-events-none absolute -top-6 -right-10 -z-10 w-[62vw] max-w-lg opacity-95 sm:w-[38vw]"
       />
+
+      <nav aria-label={t.nav.menu} className="mb-5 flex flex-wrap justify-center gap-2.5">
+        <Button
+          asChild
+          variant="outline"
+          className="h-11 rounded-full border-terracotta/40 bg-paper/70 px-5 text-xs tracking-[0.12em] text-terracotta uppercase shadow-none backdrop-blur-sm hover:bg-terracotta hover:text-primary-foreground"
+        >
+          <a href="#presentes">{t.hero.giftsAction}</a>
+        </Button>
+        <Button
+          asChild
+          className="h-11 rounded-full bg-terracotta px-5 text-xs tracking-[0.12em] text-primary-foreground uppercase shadow-none hover:bg-terracotta/90"
+        >
+          <a href="#presenca">{t.hero.rsvpAction}</a>
+        </Button>
+      </nav>
 
       <p className="kicker">{t.hero.saveTheDate}</p>
 

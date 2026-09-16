@@ -17,6 +17,8 @@ export const es: Dictionary = {
   },
   hero: {
     saveTheDate: "Save the Date",
+    giftsAction: "Ver lista de regalos",
+    rsvpAction: "Confirmar asistencia",
     couple: "Isabel y Heins",
     date: "01 . 11 . 2026",
     place: "Fortaleza - Ceará",
