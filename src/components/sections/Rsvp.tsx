@@ -1,109 +1,208 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Check, Heart, Search, X } from "lucide-react";
 
 import { Section } from "@/components/Section";
-import type { Invite } from "@/data/guests";
-import { searchInvites, submitRsvp } from "@/services/guests";
+import { rsvp as rsvpConfig } from "@/data/site";
 import { useI18n } from "@/i18n";
+import { deadlineParts, isRsvpClosed, nameWords, type RsvpInvite } from "@/lib/rsvp";
 import { cn } from "@/lib/utils";
+import { getInviteFn, searchInvitesFn, submitRsvpFn } from "@/services/rsvp";
 
-type Status = "idle" | "searching" | "results" | "empty" | "form" | "sending" | "done" | "error";
+type Status =
+  | "idle"
+  | "searching"
+  | "results"
+  | "empty"
+  | "short"
+  | "search-error"
+  | "opening"
+  | "link-missing"
+  | "form"
+  | "sending"
+  | "error"
+  | "closed"
+  | "done";
+
+type Answers = Record<string, boolean | undefined>;
+
+function previousAnswers(invite: RsvpInvite): Answers {
+  return Object.fromEntries(
+    invite.members.map((member) => [member.id, member.attending ?? undefined]),
+  );
+}
 
 export function Rsvp() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const [status, setStatus] = useState<Status>(() =>
+    isRsvpClosed(rsvpConfig.deadline) ? "closed" : "idle",
+  );
   const [query, setQuery] = useState("");
-  const [status, setStatus] = useState<Status>("idle");
-  const [results, setResults] = useState<Invite[]>([]);
-  const [invite, setInvite] = useState<Invite | null>(null);
-  const [answers, setAnswers] = useState<Record<string, boolean>>({});
+  const [results, setResults] = useState<RsvpInvite[]>([]);
+  const [invite, setInvite] = useState<RsvpInvite | null>(null);
+  const [answers, setAnswers] = useState<Answers>({});
   const [message, setMessage] = useState("");
+  const [website, setWebsite] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const deadline = deadlineParts(rsvpConfig.deadline, lang === "es" ? "es-CL" : "pt-BR");
+
+  // Quem chega pelo link personalizado (?convite=CODIGO) já vê o próprio convite.
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get("convite");
+    if (!code || isRsvpClosed(rsvpConfig.deadline)) return;
+    let cancelled = false;
+    setStatus("opening");
+    getInviteFn({ data: { code } })
+      .then((found) => {
+        if (cancelled) return;
+        if (!found) {
+          setStatus("link-missing");
+          return;
+        }
+        setInvite(found);
+        setAnswers(previousAnswers(found));
+        setStatus("form");
+      })
+      .catch(() => {
+        if (!cancelled) setStatus("search-error");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   async function handleSearch(e: FormEvent) {
     e.preventDefault();
+    if (nameWords(query).length < 2) {
+      setStatus("short");
+      return;
+    }
     setStatus("searching");
     setInvite(null);
-    const found = await searchInvites(query);
-    setResults(found);
-    setStatus(found.length ? "results" : "empty");
+    try {
+      const found = await searchInvitesFn({ data: { query } });
+      setResults(found);
+      setStatus(found.length ? "results" : "empty");
+    } catch {
+      setStatus("search-error");
+    }
   }
 
-  function pickInvite(next: Invite) {
+  function pickInvite(next: RsvpInvite) {
     setInvite(next);
-    setAnswers(Object.fromEntries(next.members.map((m) => [m.id, true])));
+    setAnswers(previousAnswers(next));
+    setMessage("");
+    setSubmitted(false);
     setStatus("form");
   }
 
+  const allAnswered = invite?.members.every((member) => answers[member.id] !== undefined) ?? false;
+  const anyAttending = invite?.members.some((member) => answers[member.id] === true) ?? false;
+  const alreadyAnswered = submitted || Boolean(invite?.respondedAt);
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!invite) return;
+    if (!invite || !allAnswered) return;
     setStatus("sending");
     try {
       const trimmedMessage = message.trim();
-      await submitRsvp({
-        inviteId: invite.id,
-        inviteTitle: invite.title,
-        answers: invite.members.map((m) => ({
-          memberId: m.id,
-          name: m.name,
-          attending: answers[m.id] ?? false,
-        })),
-        ...(trimmedMessage ? { message: trimmedMessage } : {}),
+      const result = await submitRsvpFn({
+        data: {
+          code: invite.code,
+          answers: invite.members.map((member) => ({
+            memberId: member.id,
+            attending: answers[member.id] === true,
+          })),
+          lang,
+          ...(trimmedMessage ? { message: trimmedMessage } : {}),
+          ...(website ? { website } : {}),
+        },
       });
-      setStatus("done");
+      if (result.ok) {
+        setSubmitted(true);
+        setMessage("");
+        setStatus("done");
+      } else {
+        setStatus(result.reason === "closed" ? "closed" : "error");
+      }
     } catch {
       setStatus("error");
     }
   }
 
-  function reset() {
-    setQuery("");
-    setResults([]);
+  function backToSearch() {
     setInvite(null);
-    setAnswers({});
-    setMessage("");
-    setStatus("idle");
+    setStatus(results.length ? "results" : "idle");
   }
+
+  const choiceButton =
+    "inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 text-xs tracking-[0.12em] uppercase transition-colors";
 
   return (
     <Section id="presenca" kicker={t.rsvp.kicker} title={t.rsvp.title} subtitle={t.rsvp.subtitle}>
       <div className="mx-auto max-w-2xl rounded-sm border border-terracotta/20 bg-card p-6 sm:p-10">
-        {status === "done" ? (
+        {status === "closed" ? (
           <div className="text-center">
             <Heart className="mx-auto size-7 text-terracotta" aria-hidden />
-            <h3 className="font-display mt-4 text-3xl text-ink">{t.rsvp.successTitle}</h3>
-            <p className="mt-3 text-muted-foreground">{t.rsvp.successBody}</p>
+            <h3 className="font-display mt-4 text-3xl text-ink">{t.rsvp.closedTitle}</h3>
+            <p className="mt-3 text-muted-foreground">{t.rsvp.closedBody}</p>
+          </div>
+        ) : status === "done" && invite ? (
+          <div className="text-center" role="status">
+            <Heart className="mx-auto size-7 text-terracotta" aria-hidden />
+            <h3 className="font-display mt-4 text-3xl text-ink">
+              {anyAttending ? t.rsvp.successTitle : t.rsvp.declinedTitle}
+            </h3>
+            <p className="mt-3 text-muted-foreground">
+              {anyAttending ? t.rsvp.successBody : t.rsvp.declinedBody}
+            </p>
             <button
               type="button"
-              onClick={reset}
+              onClick={() => setStatus("form")}
               className="mt-8 min-h-11 rounded-full border border-terracotta/40 px-6 text-sm tracking-[0.18em] text-terracotta uppercase"
             >
               {t.rsvp.again}
             </button>
           </div>
+        ) : status === "opening" ? (
+          <p role="status" className="text-center text-muted-foreground">
+            {t.rsvp.loadingInvite}
+          </p>
         ) : invite && (status === "form" || status === "sending" || status === "error") ? (
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="relative space-y-6">
             <div className="text-center">
               <p className="kicker">{invite.title}</p>
               <h3 className="font-display mt-2 text-2xl text-ink">{t.rsvp.membersTitle}</h3>
+              {invite.respondedAt && !submitted ? (
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {t.rsvp.alreadyAnswered(invite.respondedAt)}
+                </p>
+              ) : (
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {t.rsvp.deadline(deadline.day, deadline.month)}
+                </p>
+              )}
             </div>
 
             <ul className="space-y-3">
               {invite.members.map((member) => {
-                const attending = answers[member.id] ?? false;
+                const answer = answers[member.id];
                 return (
                   <li
                     key={member.id}
                     className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-sm border border-terracotta/15 bg-paper/70 px-4 py-3"
                   >
-                    <span className="min-w-0 truncate font-display text-xl text-ink">{member.name}</span>
+                    <span className="min-w-0 truncate font-display text-xl text-ink">
+                      {member.name}
+                    </span>
                     <div className="flex shrink-0 gap-2" role="group" aria-label={member.name}>
                       <button
                         type="button"
-                        aria-pressed={attending}
+                        aria-pressed={answer === true}
                         onClick={() => setAnswers((a) => ({ ...a, [member.id]: true }))}
                         className={cn(
-                          "inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 text-xs tracking-[0.12em] uppercase transition-colors",
-                          attending
+                          choiceButton,
+                          answer === true
                             ? "bg-terracotta text-primary-foreground"
                             : "border border-terracotta/30 text-muted-foreground",
                         )}
@@ -113,11 +212,11 @@ export function Rsvp() {
                       </button>
                       <button
                         type="button"
-                        aria-pressed={!attending}
+                        aria-pressed={answer === false}
                         onClick={() => setAnswers((a) => ({ ...a, [member.id]: false }))}
                         className={cn(
-                          "inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 text-xs tracking-[0.12em] uppercase transition-colors",
-                          !attending
+                          choiceButton,
+                          answer === false
                             ? "bg-ink text-paper"
                             : "border border-terracotta/30 text-muted-foreground",
                         )}
@@ -140,28 +239,48 @@ export function Rsvp() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 rows={3}
+                maxLength={1000}
                 placeholder={t.rsvp.messagePlaceholder}
                 className="mt-2 w-full resize-none rounded-sm border border-terracotta/25 bg-paper/70 px-4 py-3 text-base text-ink placeholder:text-muted-foreground"
               />
             </div>
+
+            {/* Campo invisível contra robôs: pessoas não veem nem preenchem. */}
+            <input
+              type="text"
+              name="website"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden
+              className="absolute -left-[9999px] size-px opacity-0"
+            />
 
             {status === "error" && (
               <p role="alert" className="text-center text-sm text-destructive">
                 {t.rsvp.error}
               </p>
             )}
+            {!allAnswered && (
+              <p className="text-center text-sm text-muted-foreground">{t.rsvp.chooseAll}</p>
+            )}
 
             <div className="flex flex-col gap-3 sm:flex-row-reverse">
               <button
                 type="submit"
-                disabled={status === "sending"}
+                disabled={status === "sending" || !allAnswered}
                 className="min-h-11 flex-1 rounded-full bg-terracotta px-6 text-sm tracking-[0.18em] text-primary-foreground uppercase disabled:opacity-60"
               >
-                {status === "sending" ? t.rsvp.sending : t.rsvp.confirm}
+                {status === "sending"
+                  ? t.rsvp.sending
+                  : alreadyAnswered
+                    ? t.rsvp.update
+                    : t.rsvp.confirm}
               </button>
               <button
                 type="button"
-                onClick={() => setStatus(results.length ? "results" : "idle")}
+                onClick={backToSearch}
                 className="min-h-11 rounded-full border border-terracotta/30 px-6 text-sm tracking-[0.18em] text-muted-foreground uppercase"
               >
                 {t.rsvp.back}
@@ -170,6 +289,9 @@ export function Rsvp() {
           </form>
         ) : (
           <div className="space-y-6">
+            <p className="text-center text-sm text-muted-foreground">
+              {t.rsvp.deadline(deadline.day, deadline.month)}
+            </p>
             <form onSubmit={handleSearch} className="space-y-3">
               <label htmlFor="rsvp-search" className="kicker block">
                 {t.rsvp.searchLabel}
@@ -180,6 +302,8 @@ export function Rsvp() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder={t.rsvp.searchPlaceholder}
+                  autoComplete="name"
+                  maxLength={120}
                   className="min-h-11 flex-1 rounded-sm border border-terracotta/25 bg-paper/70 px-4 text-base text-ink placeholder:text-muted-foreground"
                 />
                 <button
@@ -193,9 +317,24 @@ export function Rsvp() {
               </div>
             </form>
 
-            {status === "empty" && (
-              <p role="status" className="text-center text-sm text-muted-foreground">
-                {t.rsvp.noResults}
+            {(status === "short" ||
+              status === "empty" ||
+              status === "link-missing" ||
+              status === "search-error") && (
+              <p
+                role="status"
+                className={cn(
+                  "text-center text-sm",
+                  status === "search-error" ? "text-destructive" : "text-muted-foreground",
+                )}
+              >
+                {status === "short"
+                  ? t.rsvp.needFullName
+                  : status === "empty"
+                    ? t.rsvp.noResults
+                    : status === "link-missing"
+                      ? t.rsvp.linkNotFound
+                      : t.rsvp.loadError}
               </p>
             )}
 
@@ -204,16 +343,18 @@ export function Rsvp() {
                 <p className="kicker text-center">{t.rsvp.resultsTitle}</p>
                 <ul className="mt-4 space-y-3">
                   {results.map((item) => (
-                    <li key={item.id}>
+                    <li key={item.code}>
                       <button
                         type="button"
                         onClick={() => pickInvite(item)}
                         className="grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-sm border border-terracotta/20 bg-paper/70 px-4 py-4 text-left transition-colors hover:border-terracotta/50"
                       >
                         <span className="min-w-0">
-                          <span className="font-display block truncate text-xl text-ink">{item.title}</span>
+                          <span className="font-display block truncate text-xl text-ink">
+                            {item.title}
+                          </span>
                           <span className="block truncate text-sm text-muted-foreground">
-                            {item.members.map((m) => m.name).join(" · ")}
+                            {item.members.map((member) => member.name).join(" · ")}
                           </span>
                         </span>
                         <span className="shrink-0 text-xs tracking-[0.14em] text-terracotta uppercase">

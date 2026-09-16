@@ -32,6 +32,10 @@ npm run dev
 
 O servidor de desenvolvimento sobe em http://localhost:8080.
 
+## Confirmação de presença
+
+A lista de convidados e as respostas ficam numa planilha do Google. O passo a passo de configuração está em [docs/confirmacao-de-presenca.md](docs/confirmacao-de-presenca.md).
+
 ## Build
 
 ```sh

@@ -2,44 +2,49 @@ import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import tsConfigPaths from "vite-tsconfig-paths";
 
-export default defineConfig(({ command }) => ({
-  server: {
-    host: "::",
-    port: 8080,
-  },
-  css: {
-    transformer: "lightningcss",
-  },
-  resolve: {
-    dedupe: [
-      "react",
-      "react-dom",
-      "react/jsx-runtime",
-      "react/jsx-dev-runtime",
-      "@tanstack/react-query",
-      "@tanstack/query-core",
-    ],
-  },
-  plugins: [
-    tailwindcss(),
-    tsConfigPaths({ projects: ["./tsconfig.json"] }),
-    tanstackStart({
-      importProtection: {
-        behavior: "error",
-        client: {
-          files: ["**/server/**"],
-          specifiers: ["server-only"],
+export default defineConfig(({ command, mode }) => {
+  // No modo dev, as funções de servidor leem as variáveis do .env.local (na Vercel elas já vêm do painel).
+  if (command === "serve") Object.assign(process.env, loadEnv(mode, process.cwd(), ""));
+
+  return {
+    server: {
+      host: "::",
+      port: 8080,
+    },
+    css: {
+      transformer: "lightningcss",
+    },
+    resolve: {
+      dedupe: [
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "react/jsx-dev-runtime",
+        "@tanstack/react-query",
+        "@tanstack/query-core",
+      ],
+    },
+    plugins: [
+      tailwindcss(),
+      tsConfigPaths({ projects: ["./tsconfig.json"] }),
+      tanstackStart({
+        importProtection: {
+          behavior: "error",
+          client: {
+            files: ["**/server/**"],
+            specifiers: ["server-only"],
+          },
         },
-      },
-      // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-      // nitro/vite builds from this
-      server: { entry: "server" },
-    }),
-    // Nitro only runs on build; the preset is auto-detected from the host (Node by default).
-    command === "build" && nitro(),
-    viteReact(),
-  ],
-}));
+        // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
+        // nitro/vite builds from this
+        server: { entry: "server" },
+      }),
+      // Nitro only runs on build; the preset is auto-detected from the host (Node by default).
+      command === "build" && nitro(),
+      viteReact(),
+    ],
+  };
+});

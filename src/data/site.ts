@@ -7,7 +7,14 @@ export const event = {
   venueAddress: "Rua General Castelo Branco, 88, Cidade dos Funcionários, Fortaleza - CE",
   mapsUrl:
     "https://www.google.com/maps/search/?api=1&query=" +
-    encodeURIComponent("Buffet Le Jardin, Rua General Castelo Branco, 88, Cidade dos Funcionários, Fortaleza - CE"),
+    encodeURIComponent(
+      "Buffet Le Jardin, Rua General Castelo Branco, 88, Cidade dos Funcionários, Fortaleza - CE",
+    ),
+} as const;
+
+export const rsvp = {
+  /** Último momento para confirmar presença (horário de Fortaleza). Depois disso o formulário fecha. */
+  deadline: "2026-10-01T23:59:59-03:00",
 } as const;
 
 export const payment = {
