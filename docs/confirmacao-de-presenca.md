@@ -72,6 +72,9 @@ Na aba **Convidados**, uma linha por pessoa. Preencha só duas colunas:
 - **Convite**: o nome que a família vê no site. Todas as pessoas do mesmo convite
   devem ter exatamente o mesmo texto aqui. Se duas famílias tiverem o mesmo nome,
   diferencie (ex.: "Família Silva (Recife)").
+  Se o Convite ficar em branco, a pessoa já pode ser encontrada pela busca, como um
+  convite só dela, mas ainda não ganha link. Preencha o Convite para juntar a família
+  num convite só e gerar o link.
 - **Nome**: nome e sobrenome, do jeito que a pessoa digitaria na busca.
 - **Código** e **Link** são preenchidos pelo site. **Presença**, **Recado** e
   **Respondido em** são preenchidos quando a pessoa confirma.

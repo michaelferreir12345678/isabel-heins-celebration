@@ -36,8 +36,13 @@ export const NOT_ATTENDING = "Não vai";
 type GuestRow = {
   /** Número da linha na planilha (a primeira pessoa fica na linha 2). */
   row: number;
+  /** Código usado pelo site (o da planilha ou, sem convite, um código individual). */
   code: string;
+  /** Se o código já está gravado na coluna Código. */
+  storedCode: boolean;
+  /** Nome do convite; sem convite preenchido, é o nome da própria pessoa. */
   title: string;
+  hasInvite: boolean;
   name: string;
   presence: string;
   respondedAt: string;
@@ -63,6 +68,28 @@ function generateCode(used: Set<string>) {
   }
 }
 
+/**
+ * Código de quem está sem Convite preenchido: calculado a partir do nome e nunca gravado,
+ * para que, ao preencher o Convite depois, a família ganhe um código único.
+ * Tem 7 caracteres, então não se confunde com os códigos gerados (6).
+ */
+function personalCode(name: string) {
+  let hash = 0x811c9dc5;
+  for (const char of memberId(name)) {
+    hash = Math.imul(hash ^ (char.codePointAt(0) ?? 0), 0x01000193) >>> 0;
+  }
+  let code = "P";
+  for (let i = 0; i < CODE_LENGTH; i++) {
+    code += CODE_ALPHABET[hash % CODE_ALPHABET.length];
+    hash = Math.floor(hash / CODE_ALPHABET.length);
+  }
+  return code;
+}
+
+export function isPersonalCode(code: string) {
+  return code.length === CODE_LENGTH + 1 && code.startsWith("P");
+}
+
 export function inviteLink(siteUrl: string, code: string) {
   return `${siteUrl.replace(/\/+$/, "")}/?convite=${code}#presenca`;
 }
@@ -76,16 +103,23 @@ function parsePresence(value: string): boolean | null {
 
 function parseRows(values: string[][]): GuestRow[] {
   return values
-    .map((cells, index) => ({
-      row: index + 2,
-      code: (cells[0] ?? "").trim().toUpperCase(),
-      title: (cells[1] ?? "").trim(),
-      name: (cells[2] ?? "").trim(),
-      presence: (cells[3] ?? "").trim(),
-      respondedAt: (cells[5] ?? "").trim(),
-      link: (cells[6] ?? "").trim(),
-    }))
-    .filter((row) => row.title && row.name);
+    .map((cells, index) => {
+      const storedCode = (cells[0] ?? "").trim().toUpperCase();
+      const invite = (cells[1] ?? "").trim();
+      const name = (cells[2] ?? "").trim();
+      return {
+        row: index + 2,
+        code: storedCode || (invite || !name ? "" : personalCode(name)),
+        storedCode: Boolean(storedCode),
+        title: invite || name,
+        hasInvite: Boolean(invite),
+        name,
+        presence: (cells[3] ?? "").trim(),
+        respondedAt: (cells[5] ?? "").trim(),
+        link: (cells[6] ?? "").trim(),
+      };
+    })
+    .filter((row) => row.name);
 }
 
 function groupInvites(rows: GuestRow[]): RsvpInvite[] {
@@ -118,24 +152,26 @@ export function createGuestSheet(
 
   /** Preenche códigos (um por convite) e links que estiverem faltando. */
   async function fillCodesAndLinks(rows: GuestRow[]) {
-    const used = new Set(rows.map((row) => row.code).filter(Boolean));
+    const used = new Set(rows.filter((row) => row.storedCode).map((row) => row.code));
     const codeByTitle = new Map<string, string>();
     for (const row of rows) {
       const key = normalizeText(row.title);
-      if (row.code && !codeByTitle.has(key)) codeByTitle.set(key, row.code);
+      if (row.hasInvite && row.storedCode && !codeByTitle.has(key)) codeByTitle.set(key, row.code);
     }
 
     const updates: { range: string; values: CellValue[][] }[] = [];
     for (const row of rows) {
-      if (!row.code) {
+      if (row.hasInvite && !row.storedCode) {
         const key = normalizeText(row.title);
         const code = codeByTitle.get(key) ?? generateCode(used);
         codeByTitle.set(key, code);
         used.add(code);
         row.code = code;
+        row.storedCode = true;
         updates.push({ range: `${GUESTS_SHEET}!A${row.row}`, values: [[code]] });
       }
-      if (options.siteUrl) {
+      // Sem código gravado não há link: ele mudaria quando o Convite fosse preenchido.
+      if (row.storedCode && options.siteUrl) {
         const link = inviteLink(options.siteUrl, row.code);
         if (row.link !== link) {
           row.link = link;

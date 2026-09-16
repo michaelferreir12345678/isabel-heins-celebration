@@ -7,7 +7,7 @@
  * As credenciais vêm do arquivo .env.local.
  */
 import { sheetsConfigFromEnv } from "../src/server/google-sheets.ts";
-import { createGuestSheet, inviteLink } from "../src/server/guest-sheet.ts";
+import { createGuestSheet, inviteLink, isPersonalCode } from "../src/server/guest-sheet.ts";
 
 const command = process.argv[2];
 const config = sheetsConfigFromEnv(process.env);
@@ -31,17 +31,28 @@ if (command === "preparar") {
     console.error("Defina SITE_URL no .env.local (ex.: https://isabel-e-heins.vercel.app).");
     process.exit(1);
   }
-  const invites = await sheet.loadInvites();
-  if (!invites.length) {
-    console.log("Nenhum convite encontrado na aba Convidados.");
+  const all = await sheet.loadInvites();
+  const invites = all.filter((invite) => !isPersonalCode(invite.code));
+  const withoutInvite = all.filter((invite) => isPersonalCode(invite.code));
+  if (!all.length) {
+    console.log("Nenhum convidado encontrado na aba Convidados.");
   }
   for (const invite of invites) {
     const names = invite.members.map((member) => member.name).join(", ");
     console.log(`${invite.title} (${names})\n  ${inviteLink(siteUrl, invite.code)}\n`);
   }
-  console.log(
-    `${invites.length} convite(s). Os links também ficaram na coluna "Link" da planilha.`,
-  );
+  if (invites.length) {
+    console.log(
+      `${invites.length} convite(s). Os links também ficaram na coluna "Link" da planilha.`,
+    );
+  }
+  if (withoutInvite.length) {
+    console.log(
+      `\nSem a coluna Convite preenchida (${withoutInvite.length}), ainda sem link.` +
+        " Essas pessoas já podem ser encontradas pela busca por nome:",
+    );
+    for (const invite of withoutInvite) console.log(`  - ${invite.title}`);
+  }
 } else {
   console.log("Uso: npm run planilha:preparar | npm run planilha:links");
   process.exit(1);
