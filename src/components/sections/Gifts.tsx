@@ -60,7 +60,7 @@ export function Gifts() {
     <Section id="presentes" kicker={t.gifts.kicker} title={t.gifts.title} subtitle={t.gifts.subtitle}>
       <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {t.gifts.items.map((gift, index) => {
-          const Icon = icons[index % icons.length];
+          const Icon = icons[index % icons.length] ?? Heart;
           return (
             <li
               key={gift.title}
