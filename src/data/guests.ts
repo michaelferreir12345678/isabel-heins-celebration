@@ -11,7 +11,7 @@ export type Invite = {
 };
 
 /**
- * Lista simulada de convites. Substitua por Google Sheets / Lovable Cloud
+ * Lista simulada de convites. Substitua por Google Sheets / Supabase
  * mantendo o mesmo formato — a interface não precisa mudar.
  */
 export const invites: Invite[] = [

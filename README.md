@@ -1,8 +1,8 @@
 # Isabel & Heins: Our Celebration
 
-Crie o site de casamento completo, sofisticado e responsivo de Isabel e Heins para 01.11.2026 em Fortaleza - Ceará.
+Site de casamento completo, sofisticado e responsivo de Isabel e Heins para 01.11.2026 em Fortaleza - Ceará.
 
-A imagem anexada é a principal referência visual:
+Referência visual:
 - Nomes dos noivos: Isabel e Heins
 - Estilo: papel artesanal/off-white suave, aquarela botânica no topo e cena campestre poética com banco e árvores ao pôr do sol na base, paleta de terracota, coral, pêssego, tons quentes e folhagens naturais.
 - Tipografia: serifada editorial elegante de alto contraste (estilo Higuen Serif / Cormorant Garamond / Playfair) e caligrafia fluida e refinada para destaques e nomes (estilo Angeletta).
@@ -19,25 +19,24 @@ Requisitos principais:
 9. Mensagem final afetiva e rodapé minimalista.
 10. Arquitetura limpa com textos centralizados em arquivos de tradução (pt e es), dados configuráveis e alta atenção à acessibilidade e responsividade mobile-first.
 
-This project was built with [Lovable](https://lovable.dev).
+## Desenvolvimento
 
-**Live app**: https://isabel-heins-celebration.lovable.app
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/11095608-52be-4f0a-92f6-e13981df5dc5).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Requer Node.js e npm — [instale com o nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
+git clone https://github.com/michaelferreir12345678/isabel-heins-celebration.git
+cd isabel-heins-celebration
 npm i
 npm run dev
 ```
+
+O servidor de desenvolvimento sobe em http://localhost:8080.
+
+## Build
+
+```sh
+npm run build
+node .output/server/index.mjs
+```
+
+O build usa o [Nitro](https://nitro.build), que detecta automaticamente o provedor de hospedagem (Vercel, Netlify, Cloudflare etc.) e gera um servidor Node por padrão.

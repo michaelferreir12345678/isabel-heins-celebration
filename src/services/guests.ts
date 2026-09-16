@@ -25,7 +25,7 @@ const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 /**
  * Busca convites pelo nome de um convidado ou pelo nome do convite.
  * Camada de serviço isolada: troque o corpo por uma chamada ao
- * Google Sheets ou ao Lovable Cloud mantendo a mesma assinatura.
+ * Google Sheets ou ao Supabase mantendo a mesma assinatura.
  */
 export async function searchInvites(query: string): Promise<Invite[]> {
   await delay(500);

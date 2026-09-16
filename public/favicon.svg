@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Isabel &amp; Heins</title>
+  <defs>
+    <clipPath id="top-cross"><circle cx="32" cy="21.75" r="6" /></clipPath>
+    <clipPath id="bottom-cross"><circle cx="32" cy="42.25" r="6" /></clipPath>
+    <clipPath id="bottom-over"><circle cx="32" cy="42.25" r="7.5" /></clipPath>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#a8583b" />
+  <g fill="none" stroke-width="5">
+    <circle cx="24" cy="32" r="13" stroke="#faf4e7" />
+    <circle cx="40" cy="32" r="13" stroke="#a8583b" stroke-width="8" clip-path="url(#top-cross)" />
+    <circle cx="40" cy="32" r="13" stroke="#f2c7ab" />
+    <circle cx="24" cy="32" r="13" stroke="#a8583b" stroke-width="8" clip-path="url(#bottom-cross)" />
+    <circle cx="24" cy="32" r="13" stroke="#faf4e7" clip-path="url(#bottom-over)" />
+  </g>
+</svg>
