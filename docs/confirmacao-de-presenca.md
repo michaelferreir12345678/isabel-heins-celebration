@@ -75,7 +75,13 @@ Na aba **Convidados**, uma linha por pessoa. Preencha só duas colunas:
   Se o Convite ficar em branco, a pessoa já pode ser encontrada pela busca, como um
   convite só dela, mas ainda não ganha link. Preencha o Convite para juntar a família
   num convite só e gerar o link.
-- **Nome**: nome e sobrenome, do jeito que a pessoa digitaria na busca.
+  Use nomes que identifiquem a família (ex.: "Família Firmeza"): todas as linhas com o
+  mesmo Convite viram um convite só.
+- **Mudar alguém de convite depois que o código foi gerado**: altere o Convite e apague só
+  o **Código** dessa linha; o site gera o novo e atualiza o Link. Links antigos já
+  enviados deixam de valer para essa pessoa.
+- **Nome**: nome e sobrenome, do jeito que a pessoa digitaria na busca. A busca aceita
+  nomes do meio a mais ou a menos e pequenos erros de digitação, mas não apelidos.
 - **Código** e **Link** são preenchidos pelo site. **Presença**, **Recado** e
   **Respondido em** são preenchidos quando a pessoa confirma.
 - Pode ordenar e filtrar as linhas à vontade, mas não renomeie as abas nem mude a
