@@ -68,16 +68,61 @@ export const es: Dictionary = {
   gallery: {
     kicker: "Instantes",
     title: "Nuestros recuerdos",
-    subtitle: "Un recorte cariñoso de nuestros días. Muy pronto, con nuestras fotos.",
-    placeholder: "Foto muy pronto",
-    captions: [
-      "El primer invierno juntos",
-      "Playas de Ceará",
-      "Nuestra cocina en Santiago",
-      "Viaje al sur de Chile",
-      "La familia reunida",
-      "La propuesta",
-    ],
+    subtitle: "Un pedacito de nuestra historia en fotos, desde el primer encuentro hasta el sí.",
+    swipeHint: "Desliza para ver más",
+    open: "Ampliar foto",
+    close: "Cerrar",
+    previous: "Foto anterior",
+    next: "Foto siguiente",
+    counter: (current: number, total: number) => `${current} de ${total}`,
+    photos: {
+      comeco: {
+        place: "Estados Unidos",
+        caption:
+          "Era 4 de julio, el Día de la Independencia, y fuimos a ver los fuegos artificiales con la gente de la escuela.",
+        alt: "Isabel y Heins sentados en el pasto, de noche, esperando los fuegos artificiales del 4 de julio en Estados Unidos.",
+      },
+      carnaval: {
+        place: "Carnaval en Flecheiras",
+        caption:
+          "En la costa de Ceará, Heins con camisa floreada e Isabel con glitter. El Carnaval aprobó a la pareja.",
+        alt: "Isabel y Heins abrazados en el Carnaval callejero de Flecheiras, en Ceará, de noche.",
+      },
+      praia: {
+        place: "Fortaleza",
+        caption:
+          "La primera vez de Heins en Fortaleza. Conoció el sol de Ceará y volvió de otro color.",
+        alt: "Isabel y Heins tendidos en la arena, con edificios y palmeras de fondo.",
+      },
+      neve: {
+        place: "Cordillera de los Andes",
+        caption:
+          "Día de nieve en la cordillera. El cielo estaba tan azul que ni parecía que hacía frío.",
+        alt: "Selfie de la pareja en la nieve, con montañas y cielo azul de fondo.",
+      },
+      sul: {
+        place: "Sur de Chile",
+        caption:
+          "Un río tan azul que parecía de mentira. El viento helado se encargó de recordarnos que era real.",
+        alt: "Isabel y Heins con gorro y parka en un mirador, con un río turquesa y un cerro de fondo.",
+      },
+      show: {
+        place: "Concierto de Pedro Sampaio",
+        caption:
+          "Isabel se sabía todas las letras. Heins quedó a cargo de las chelas y de hacer como que también se las sabía.",
+        alt: "Selfie de Isabel y Heins con vasos de cerveza en el concierto de Pedro Sampaio, con el escenario de fondo.",
+      },
+      brinde: {
+        place: "Ensayo general",
+        caption: "Practicando el brindis. De aquí a noviembre le agarramos la mano.",
+        alt: "Isabel y Heins, bien vestidos, brindando frente a un arco de flores iluminado.",
+      },
+      pedido: {
+        place: "La propuesta",
+        caption: "Isabel dijo que sí. El resto de la historia lo ves el 01.11.2026.",
+        alt: "Selfie de la pareja en la playa; Isabel muestra el anillo de compromiso.",
+      },
+    },
   },
   wedding: {
     kicker: "Detalles",
