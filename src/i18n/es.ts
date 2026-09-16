@@ -37,31 +37,32 @@ export const es: Dictionary = {
   story: {
     kicker: "El camino hasta acá",
     title: "Nuestra historia",
-    subtitle: "Cuatro momentos que nos trajeron hasta el 01.11.2026.",
+    subtitle:
+      "¿Quién iba a pensar que, tan lejos de casa, íbamos a encontrar al amor de nuestra vida?",
     items: [
       {
         tag: "Donde partió todo",
         year: "Estados Unidos",
-        title: "El primer encuentro",
-        text: "Dos acentos distintos y una conversación que no terminó nunca más. Lejos de casa descubrimos lo que era sentirse en casa.",
+        title: "Amigos antes que todo",
+        text: "Por casualidad terminamos viviendo en la misma casa y estudiando en la misma escuela, lejos de todo lo que conocíamos. Primero fuimos amigos: conversas hasta la madrugada, noches de películas, comida nueva para probar y esos largos viajes de vuelta en metro. Cuando nos dimos cuenta, el cariño ya se había convertido en amor.",
       },
       {
         tag: "Distancia",
         year: "Brasil ↔ Chile",
-        title: "Amor a contra horario",
-        text: "Miles de kilómetros, llamadas de madrugada y maletas siempre listas. Cada reencuentro confirmaba la decisión.",
+        title: "Valía la pena esperar",
+        text: "Después llegó la distancia. Fueron años de echarnos de menos, de aeropuertos, de idas y vueltas y de videollamadas para acortar los kilómetros. Cada reencuentro nos confirmaba lo que ya sabíamos: valía la pena esperarnos.",
       },
       {
         tag: "Raíces",
         year: "Nuestra vida en Chile",
-        title: "Construyendo lo cotidiano",
-        text: "La cordillera en la ventana, el desayuno compartido, una casa hecha de dos culturas y un solo idioma: el nuestro.",
+        title: "Un hogar nuestro",
+        text: "Un día decidimos vivir juntos en Chile. Cambiarse de país no fue fácil y hubo días muy duros, pero teniéndonos el uno al otro todo se hizo más liviano. Aquí armamos nuestra casa, juntamos lindos recuerdos y aprendimos a cuidarnos.",
       },
       {
         tag: "El gran día",
         year: "01.11.2026",
         title: "Sí, para siempre",
-        text: "Volvemos a Fortaleza para decir que sí frente a quienes queremos. Y te queremos en esta historia.",
+        text: "Le ganamos a la distancia y nos seguimos eligiendo cada día. Ahora volvemos a Fortaleza para prometerlo frente a quienes queremos: seguir juntos en la alegría y en la tristeza, en la salud y en la enfermedad. ¡Qué lindo tenerte aquí con nosotros!",
       },
     ],
   },
