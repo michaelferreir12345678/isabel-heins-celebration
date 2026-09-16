@@ -16,6 +16,7 @@ import {
 import { createDemoStore } from "./demo-guests";
 import { sheetsConfigFromEnv } from "./google-sheets.ts";
 import { createGuestSheet, type SaveResponseInput } from "./guest-sheet.ts";
+import { nameMatchScore } from "./name-match.ts";
 
 type Store = {
   loadInvites(): Promise<RsvpInvite[]>;
@@ -61,19 +62,26 @@ async function allInvites() {
   return invites;
 }
 
-/** Busca por nome e sobrenome. Palavras soltas não bastam, para proteger a lista. */
+/**
+ * Busca por nome e sobrenome, tolerante a nomes do meio e pequenos erros
+ * (regras em name-match.ts). Palavras soltas não bastam, para proteger a lista.
+ */
 export async function searchInvites(query: string): Promise<RsvpInvite[]> {
   const words = nameWords(query);
   if (words.length < 2) return [];
   const invites = await allInvites();
   return invites
-    .filter((invite) =>
-      invite.members.some((member) => {
-        const memberWords = nameWords(member.name);
-        return words.every((word) => memberWords.includes(word));
-      }),
-    )
-    .slice(0, 5);
+    .map((invite) => ({
+      invite,
+      score: Math.max(
+        0,
+        ...invite.members.map((member) => nameMatchScore(words, nameWords(member.name))),
+      ),
+    }))
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 5)
+    .map(({ invite }) => invite);
 }
 
 export async function findInvite(code: string): Promise<RsvpInvite | null> {
