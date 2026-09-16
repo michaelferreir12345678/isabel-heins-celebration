@@ -27,8 +27,8 @@ export const pt = {
     kicker: "Com alegria",
     title: "Nosso convite",
     body: [
-      "Depois de anos atravessando fronteiras, fusos e aeroportos, escolhemos um lugar e uma data para reunir quem caminhou conosco.",
-      "Será uma tarde simples e luminosa, ao som do mar de Fortaleza, entre abraços demorados e histórias que já conhecemos de cor.",
+      "A gente se conheceu longe de casa e, depois de muita estrada, escolheu Fortaleza pra dizer sim.",
+      "No dia 1º de novembro, queremos ter por perto quem torceu pela gente esse tempo todo. Contamos com você!",
     ],
     signature: "Isabel e Heins",
   },

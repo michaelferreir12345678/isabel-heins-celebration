@@ -29,8 +29,8 @@ export const es: Dictionary = {
     kicker: "Con alegría",
     title: "Nuestra invitación",
     body: [
-      "Después de años cruzando fronteras, husos horarios y aeropuertos, elegimos un lugar y una fecha para juntar a quienes caminaron con nosotros.",
-      "Será una tarde simple y luminosa, con el mar de Fortaleza de fondo, entre abrazos largos e historias que ya nos sabemos de memoria.",
+      "Nos conocimos lejos de casa y, después de mucho camino, elegimos Fortaleza para decir que sí.",
+      "El 1 de noviembre queremos tener cerca a quienes nos apoyaron todo este tiempo. ¡Contamos contigo!",
     ],
     signature: "Isabel y Heins",
   },
