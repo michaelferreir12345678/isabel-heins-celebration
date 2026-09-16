@@ -143,7 +143,7 @@ function SantanderPanel({ amount }: { amount?: number | undefined }) {
     <div className="space-y-3">
       <div
         role="img"
-        aria-label={`${chile.bank} — ${m.accountType} ${chile.account}`}
+        aria-label={`${chile.bank}, ${m.accountType} ${chile.account}`}
         className="relative isolate flex aspect-[1.586/1] flex-col justify-between gap-4 rounded-xl bg-linear-to-br from-[#ff2a2a] via-[#e30000] to-[#990000] p-5 text-white shadow-[0_22px_40px_-22px_rgba(153,0,0,0.9)] sm:p-6"
       >
         <div aria-hidden className="absolute inset-0 -z-10 overflow-hidden rounded-xl">

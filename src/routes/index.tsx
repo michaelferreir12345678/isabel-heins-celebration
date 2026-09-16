@@ -14,9 +14,9 @@ import { Wedding } from "@/components/sections/Wedding";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Isabel & Heins — Casamento em Fortaleza" },
+      { title: "Isabel & Heins | Casamento em Fortaleza" },
       { name: "description", content: "Site oficial do casamento de Isabel e Heins, dia 01 de novembro de 2026, em Fortaleza, Ceará." },
-      { property: "og:title", content: "Isabel & Heins — 01.11.2026" },
+      { property: "og:title", content: "Isabel & Heins | 01.11.2026" },
       { property: "og:description", content: "Vamos celebrar o amor em Fortaleza, Ceará." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/" },

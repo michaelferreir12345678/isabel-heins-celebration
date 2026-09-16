@@ -66,7 +66,7 @@ export const pt = {
   gallery: {
     kicker: "Instantes",
     title: "Nossas memórias",
-    subtitle: "Um recorte afetivo dos nossos dias — em breve, com nossas fotos.",
+    subtitle: "Um recorte afetivo dos nossos dias. Em breve, com nossas fotos.",
     placeholder: "Foto em breve",
     captions: [
       "O primeiro inverno juntos",
@@ -85,7 +85,7 @@ export const pt = {
     dateValue: "01 de novembro de 2026, às 16h",
     venueLabel: "Local",
     venueName: "Buffet Le Jardin",
-    venueAddress: "Rua General Castelo Branco, 88 — Cidade dos Funcionários, Fortaleza - CE",
+    venueAddress: "Rua General Castelo Branco, 88, Cidade dos Funcionários, Fortaleza - CE",
     dressLabel: "Traje",
     dressValue: "Fino social",
     dressNote: "Cores claras e tons naturais combinam com a nossa tarde.",
@@ -120,7 +120,7 @@ export const pt = {
     kicker: "Carinho",
     title: "Lista de presentes nada convencionais",
     subtitle:
-      "Sua presença já é o maior presente. Mas, se quiser ajudar esse casal cearense-chileno a começar a vida, escolha uma das opções abaixo — todas 100% verdadeiras (quase).",
+      "Sua presença já é o maior presente. Mas, se quiser ajudar esse casal cearense-chileno a começar a vida, escolha uma das opções abaixo. Todas 100% verdadeiras (quase).",
     choose: "Presentear",
     approx: "aprox.",
     items: {
@@ -213,7 +213,7 @@ export const pt = {
   },
   footer: {
     couple: "Isabel & Heins",
-    date: "01.11.2026 — Fortaleza, Ceará",
+    date: "01.11.2026 · Fortaleza, Ceará",
   },
 };
 

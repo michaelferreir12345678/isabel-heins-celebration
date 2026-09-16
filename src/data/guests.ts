@@ -12,7 +12,7 @@ export type Invite = {
 
 /**
  * Lista simulada de convites. Substitua por Google Sheets / Supabase
- * mantendo o mesmo formato — a interface não precisa mudar.
+ * mantendo o mesmo formato, sem precisar mudar a interface.
  */
 export const invites: Invite[] = [
   {

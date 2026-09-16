@@ -21,7 +21,7 @@ Requisitos principais:
 
 ## Desenvolvimento
 
-Requer Node.js e npm — [instale com o nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+Requer Node.js e npm ([instale com o nvm](https://github.com/nvm-sh/nvm#installing-and-updating)).
 
 ```sh
 git clone https://github.com/michaelferreir12345678/isabel-heins-celebration.git

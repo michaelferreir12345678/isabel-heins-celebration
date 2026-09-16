@@ -68,7 +68,7 @@ export const es: Dictionary = {
   gallery: {
     kicker: "Instantes",
     title: "Nuestros recuerdos",
-    subtitle: "Un recorte cariñoso de nuestros días — pronto, con nuestras fotos.",
+    subtitle: "Un recorte cariñoso de nuestros días. Muy pronto, con nuestras fotos.",
     placeholder: "Foto muy pronto",
     captions: [
       "El primer invierno juntos",
@@ -87,7 +87,7 @@ export const es: Dictionary = {
     dateValue: "1 de noviembre de 2026, a las 16:00",
     venueLabel: "Lugar",
     venueName: "Buffet Le Jardin",
-    venueAddress: "Rua General Castelo Branco, 88 — Cidade dos Funcionários, Fortaleza - CE",
+    venueAddress: "Rua General Castelo Branco, 88, Cidade dos Funcionários, Fortaleza - CE",
     dressLabel: "Vestimenta",
     dressValue: "Formal elegante",
     dressNote: "Los colores claros y los tonos naturales acompañan bien nuestra tarde.",
@@ -122,7 +122,7 @@ export const es: Dictionary = {
     kicker: "Cariño",
     title: "Lista de regalos poco convencionales",
     subtitle:
-      "Tu presencia ya es el mejor regalo. Pero si quieres ayudar a esta pareja cearense-chilena a partir su vida juntos, elige una opción de aquí abajo — todas 100% reales (más o menos).",
+      "Tu presencia ya es el mejor regalo. Pero si quieres ayudar a esta pareja cearense-chilena a partir su vida juntos, elige una opción de aquí abajo. Todas 100% reales (más o menos).",
     choose: "Regalar",
     approx: "aprox.",
     items: {
@@ -216,6 +216,6 @@ export const es: Dictionary = {
   },
   footer: {
     couple: "Isabel & Heins",
-    date: "01.11.2026 — Fortaleza, Ceará",
+    date: "01.11.2026 · Fortaleza, Ceará",
   },
 };

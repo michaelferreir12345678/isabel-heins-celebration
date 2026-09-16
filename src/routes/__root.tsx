@@ -74,10 +74,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Isabel & Heins — Casamento" },
+      { title: "Isabel & Heins | Casamento" },
       { name: "description", content: "Celebre o casamento de Isabel e Heins em Fortaleza, Ceará, no dia 01.11.2026." },
       { name: "author", content: "Isabel e Heins" },
-      { property: "og:title", content: "Isabel & Heins — 01.11.2026" },
+      { property: "og:title", content: "Isabel & Heins | 01.11.2026" },
       { property: "og:description", content: "Celebremos o amor em Fortaleza, Ceará." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
