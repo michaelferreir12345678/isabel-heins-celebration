@@ -35,11 +35,11 @@ export function SiteNav() {
     >
       <nav
         aria-label={t.nav.menu}
-        className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-3 sm:px-8"
+        className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-5 py-3 min-[340px]:gap-4 sm:px-8"
       >
         <a
           href="#topo"
-          className="font-script min-w-0 truncate text-[1.35rem] text-ink min-[400px]:text-2xl sm:text-[1.7rem]"
+          className="font-script min-w-0 truncate text-[1.15rem] text-ink min-[340px]:text-[1.35rem] min-[400px]:text-2xl sm:text-[1.7rem]"
         >
           Isabel &amp; Heins
         </a>
