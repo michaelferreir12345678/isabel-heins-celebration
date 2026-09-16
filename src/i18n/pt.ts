@@ -15,6 +15,8 @@ export const pt = {
   },
   hero: {
     saveTheDate: "Save the Date",
+    giftsAction: "Ver lista de presentes",
+    rsvpAction: "Confirmar presença",
     couple: "Isabel e Heins",
     date: "01 . 11 . 2026",
     place: "Fortaleza - Ceará",
