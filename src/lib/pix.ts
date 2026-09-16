@@ -20,7 +20,7 @@ function field(id: string, value: string) {
 function sanitize(value: string, maxLength: number) {
   return value
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^A-Za-z0-9 ]/g, " ")
     .replace(/\s+/g, " ")
     .trim()
