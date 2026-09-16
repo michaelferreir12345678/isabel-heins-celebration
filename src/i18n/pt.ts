@@ -125,15 +125,16 @@ export const pt = {
   wedding: {
     kicker: "Detalhes",
     title: "O casamento",
-    subtitle: "Tudo o que você precisa saber para celebrar com a gente.",
+    subtitle: "Anota na agenda e vem celebrar com a gente.",
     dateLabel: "Data e horário",
-    dateValue: "01 de novembro de 2026, às 16h",
+    dateValue: "1º de novembro de 2026",
+    dateNote: "Domingo, às 16h",
     venueLabel: "Local",
     venueName: "Buffet Le Jardin",
     venueAddress: "Rua General Castelo Branco, 88, Cidade dos Funcionários, Fortaleza - CE",
     dressLabel: "Traje",
     dressValue: "Fino social",
-    dressNote: "Cores claras e tons naturais combinam com a nossa tarde.",
+    dressNote: "Fortaleza é quente o ano todo, então vale apostar em tecidos leves.",
     maps: "Abrir no Google Maps",
   },
   rsvp: {
@@ -252,7 +253,7 @@ export const pt = {
     },
   },
   closing: {
-    title: "Até 01 de novembro",
+    title: "Até 1º de novembro",
     body: "Obrigado por fazer parte da nossa história. Que esse dia seja lembrado por muito amor, boa música e tempo de sobra para dançar.",
     signature: "Com amor, Isabel e Heins",
   },

@@ -12,7 +12,7 @@ export function Wedding() {
       icon: CalendarHeart,
       label: t.wedding.dateLabel,
       value: t.wedding.dateValue,
-      note: undefined as string | undefined,
+      note: t.wedding.dateNote,
     },
     {
       icon: MapPin,
