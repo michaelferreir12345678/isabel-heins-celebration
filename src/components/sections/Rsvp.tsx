@@ -38,6 +38,7 @@ export function Rsvp() {
     if (!invite) return;
     setStatus("sending");
     try {
+      const trimmedMessage = message.trim();
       await submitRsvp({
         inviteId: invite.id,
         inviteTitle: invite.title,
@@ -46,7 +47,7 @@ export function Rsvp() {
           name: m.name,
           attending: answers[m.id] ?? false,
         })),
-        message: message.trim() || undefined,
+        ...(trimmedMessage ? { message: trimmedMessage } : {}),
       });
       setStatus("done");
     } catch {

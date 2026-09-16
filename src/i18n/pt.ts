@@ -157,6 +157,6 @@ export const pt = {
     couple: "Isabel & Heins",
     date: "01.11.2026 — Fortaleza, Ceará",
   },
-} as const;
+};
 
 export type Dictionary = typeof pt;
