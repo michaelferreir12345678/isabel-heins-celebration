@@ -10,7 +10,7 @@ export function Hero() {
   return (
     <section
       id="topo"
-      className="relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-5 pt-28 pb-40 text-center sm:px-8"
+      className="relative isolate flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-5 pt-24 pb-[calc(var(--art)+1.5rem)] text-center [--art:38vh] sm:px-8 sm:pt-28 short:pt-20 compact:[--art:32vh]"
     >
       <img
         src={paper}
@@ -51,13 +51,25 @@ export function Hero() {
         {t.hero.couple}
       </h1>
 
-      <div className="mt-10 flex flex-col items-center gap-3">
-        <p className="font-display text-2xl tracking-[0.22em] text-ink sm:text-3xl">{t.hero.date}</p>
+      <div className="mt-10 flex flex-col items-center gap-3 short:mt-6">
+        <p className="font-display text-2xl tracking-[0.22em] text-ink sm:text-3xl">
+          {t.hero.date}
+        </p>
         <span aria-hidden className="h-px w-40 bg-terracotta/40" />
         <p className="text-sm tracking-[0.3em] text-muted-foreground uppercase">{t.hero.place}</p>
       </div>
 
-      <p className="font-script mt-12 text-3xl text-terracotta sm:text-4xl">{t.hero.phrase}</p>
+      <p className="font-script text-halo mt-12 text-3xl text-terracotta sm:text-4xl short:mt-7">
+        {t.hero.phrase}
+      </p>
+
+      <a
+        href="#intro"
+        className="mt-10 hidden flex-col items-center gap-2 text-[0.68rem] tracking-[0.3em] text-ink/70 uppercase tall:flex"
+      >
+        {t.hero.scroll}
+        <span aria-hidden className="h-8 w-px animate-pulse bg-ink/40" />
+      </a>
 
       <img
         src={sunset}
@@ -65,16 +77,8 @@ export function Hero() {
         aria-hidden
         width={1920}
         height={1088}
-        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[38vh] w-full object-cover object-bottom [mask-image:linear-gradient(to_bottom,transparent,black_45%)]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-(--art) w-full object-cover object-bottom [mask-image:linear-gradient(to_bottom,transparent,black_45%)]"
       />
-
-      <a
-        href="#intro"
-        className="absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-[0.68rem] tracking-[0.3em] text-ink/70 uppercase"
-      >
-        {t.hero.scroll}
-        <span aria-hidden className="h-10 w-px animate-pulse bg-ink/40" />
-      </a>
     </section>
   );
 }

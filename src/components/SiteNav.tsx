@@ -39,13 +39,13 @@ export function SiteNav() {
       >
         <a
           href="#topo"
-          className="font-script min-w-0 truncate text-2xl text-ink sm:text-[1.7rem]"
+          className="font-script min-w-0 truncate text-[1.35rem] text-ink min-[400px]:text-2xl sm:text-[1.7rem]"
         >
           Isabel &amp; Heins
         </a>
 
         <div className="flex shrink-0 items-center gap-2">
-          <ul className="hidden items-center gap-6 lg:flex">
+          <ul className="hidden items-center gap-6 xl:flex">
             {links.map((link) => (
               <li key={link.href}>
                 <a
@@ -64,7 +64,7 @@ export function SiteNav() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? t.nav.close : t.nav.menu}
-            className="grid min-h-11 min-w-11 place-items-center rounded-full text-ink lg:hidden"
+            className="grid min-h-11 min-w-11 place-items-center rounded-full text-ink xl:hidden"
           >
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
@@ -72,7 +72,7 @@ export function SiteNav() {
       </nav>
 
       {open && (
-        <div id="mobile-menu" className="border-t border-terracotta/15 bg-paper/95 lg:hidden">
+        <div id="mobile-menu" className="border-t border-terracotta/15 bg-paper/95 xl:hidden">
           <ul className="mx-auto flex max-w-6xl flex-col px-5 py-2 sm:px-8">
             {links.map((link) => (
               <li key={link.href}>
