@@ -202,7 +202,7 @@ export function Rsvp() {
   }
 
   const choiceButton =
-    "inline-flex min-h-11 items-center gap-1.5 rounded-full px-4 text-xs tracking-[0.12em] uppercase transition-colors";
+    "inline-flex min-h-11 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-2 text-xs tracking-[0.12em] uppercase transition-colors sm:px-4";
 
   return (
     <Section id="presenca" kicker={t.rsvp.kicker} title={t.rsvp.title} subtitle={t.rsvp.subtitle}>
@@ -256,12 +256,18 @@ export function Rsvp() {
                 return (
                   <li
                     key={member.id}
-                    className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-sm border border-terracotta/15 bg-paper/70 px-4 py-3"
+                    // No celular o nome fica em cima e os botões embaixo; na mesma linha os
+                    // botões ocupavam todo o espaço e o nome sumia.
+                    className="flex flex-col gap-3 rounded-sm border border-terracotta/15 bg-paper/70 px-4 py-3 sm:grid sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center"
                   >
-                    <span className="min-w-0 truncate font-display text-xl text-ink">
+                    <span className="font-display text-xl break-words text-ink sm:min-w-0 sm:truncate">
                       {member.name}
                     </span>
-                    <div className="flex shrink-0 gap-2" role="group" aria-label={member.name}>
+                    <div
+                      className="grid grid-cols-2 gap-2 sm:flex sm:shrink-0"
+                      role="group"
+                      aria-label={member.name}
+                    >
                       <button
                         type="button"
                         aria-pressed={answer === true}
@@ -274,7 +280,8 @@ export function Rsvp() {
                         )}
                       >
                         <Check className="size-3.5" aria-hidden />
-                        {t.rsvp.attending}
+                        <span className="sm:hidden">{t.rsvp.attendingShort}</span>
+                        <span className="hidden sm:inline">{t.rsvp.attending}</span>
                       </button>
                       <button
                         type="button"
@@ -288,7 +295,8 @@ export function Rsvp() {
                         )}
                       >
                         <X className="size-3.5" aria-hidden />
-                        {t.rsvp.notAttending}
+                        <span className="sm:hidden">{t.rsvp.notAttendingShort}</span>
+                        <span className="hidden sm:inline">{t.rsvp.notAttending}</span>
                       </button>
                     </div>
                   </li>

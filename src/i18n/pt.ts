@@ -158,6 +158,8 @@ export const pt = {
       `Resposta enviada em ${date}. Se algo mudou, é só atualizar abaixo.`,
     attending: "Vai comparecer",
     notAttending: "Não poderá ir",
+    attendingShort: "Vai",
+    notAttendingShort: "Não vai",
     chooseAll: "Marque uma opção para cada pessoa.",
     messageLabel: "Deixe um recado (opcional)",
     messagePlaceholder: "Uma mensagem carinhosa para os noivos",

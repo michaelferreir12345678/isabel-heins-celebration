@@ -161,6 +161,8 @@ export const es: Dictionary = {
       `Respuesta enviada el ${date}. Si algo cambió, puedes actualizarla aquí abajo.`,
     attending: "Va a asistir",
     notAttending: "No podrá ir",
+    attendingShort: "Va",
+    notAttendingShort: "No va",
     chooseAll: "Marca una opción para cada persona.",
     messageLabel: "Déjanos un mensaje (opcional)",
     messagePlaceholder: "Un mensaje cariñoso para los novios",
