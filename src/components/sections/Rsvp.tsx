@@ -1,12 +1,18 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent, type KeyboardEvent } from "react";
 import { Check, Heart, Search, X } from "lucide-react";
 
 import { Section } from "@/components/Section";
 import { rsvp as rsvpConfig } from "@/data/site";
 import { useI18n } from "@/i18n";
-import { deadlineParts, isRsvpClosed, nameWords, type RsvpInvite } from "@/lib/rsvp";
+import {
+  deadlineParts,
+  hasEnoughLetters,
+  isRsvpClosed,
+  type RsvpInvite,
+  type RsvpSuggestion,
+} from "@/lib/rsvp";
 import { cn } from "@/lib/utils";
-import { getInviteFn, searchInvitesFn, submitRsvpFn } from "@/services/rsvp";
+import { getInviteFn, searchInvitesFn, submitRsvpFn, suggestGuestsFn } from "@/services/rsvp";
 
 type Status =
   | "idle"
@@ -31,6 +37,35 @@ function previousAnswers(invite: RsvpInvite): Answers {
   );
 }
 
+/** Sugestões de nomes enquanto a pessoa digita (a partir de 3 letras). */
+function useSuggestions(query: string) {
+  const [state, setState] = useState<{ items: RsvpSuggestion[]; failed: boolean } | null>(null);
+  const enough = hasEnoughLetters(query);
+
+  useEffect(() => {
+    if (!enough) {
+      setState(null);
+      return;
+    }
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      suggestGuestsFn({ data: { query } })
+        .then((items) => {
+          if (!cancelled) setState({ items, failed: false });
+        })
+        .catch(() => {
+          if (!cancelled) setState({ items: [], failed: true });
+        });
+    }, 250);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [query, enough]);
+
+  return enough ? state : null;
+}
+
 export function Rsvp() {
   const { t, lang } = useI18n();
   const [status, setStatus] = useState<Status>(() =>
@@ -43,6 +78,10 @@ export function Rsvp() {
   const [message, setMessage] = useState("");
   const [website, setWebsite] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [listOpen, setListOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const suggestions = useSuggestions(query);
+  const showList = listOpen && suggestions !== null;
 
   const deadline = deadlineParts(rsvpConfig.deadline, lang === "es" ? "es-CL" : "pt-BR");
 
@@ -73,7 +112,8 @@ export function Rsvp() {
 
   async function handleSearch(e: FormEvent) {
     e.preventDefault();
-    if (nameWords(query).length < 2) {
+    setListOpen(false);
+    if (!hasEnoughLetters(query)) {
       setStatus("short");
       return;
     }
@@ -94,6 +134,32 @@ export function Rsvp() {
     setMessage("");
     setSubmitted(false);
     setStatus("form");
+  }
+
+  function chooseSuggestion(suggestion: RsvpSuggestion) {
+    setQuery(suggestion.name);
+    setListOpen(false);
+    setActiveIndex(-1);
+    setResults([]);
+    pickInvite(suggestion.invite);
+  }
+
+  function handleSearchKeys(e: KeyboardEvent<HTMLInputElement>) {
+    const items = suggestions?.items ?? [];
+    if (e.key === "ArrowDown" && items.length) {
+      e.preventDefault();
+      setListOpen(true);
+      setActiveIndex((index) => Math.min(items.length - 1, index + 1));
+    } else if (e.key === "ArrowUp" && items.length) {
+      e.preventDefault();
+      setActiveIndex((index) => Math.max(-1, index - 1));
+    } else if (e.key === "Enter" && showList && items[activeIndex]) {
+      e.preventDefault();
+      chooseSuggestion(items[activeIndex]);
+    } else if (e.key === "Escape") {
+      setListOpen(false);
+      setActiveIndex(-1);
+    }
   }
 
   const allAnswered = invite?.members.every((member) => answers[member.id] !== undefined) ?? false;
@@ -297,15 +363,80 @@ export function Rsvp() {
                 {t.rsvp.searchLabel}
               </label>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <input
-                  id="rsvp-search"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder={t.rsvp.searchPlaceholder}
-                  autoComplete="name"
-                  maxLength={120}
-                  className="min-h-11 flex-1 rounded-sm border border-terracotta/25 bg-paper/70 px-4 text-base text-ink placeholder:text-muted-foreground"
-                />
+                <div className="relative flex-1">
+                  <input
+                    id="rsvp-search"
+                    role="combobox"
+                    aria-expanded={showList}
+                    aria-controls="rsvp-suggestions"
+                    aria-autocomplete="list"
+                    aria-activedescendant={
+                      showList && activeIndex >= 0 ? `rsvp-suggestion-${activeIndex}` : undefined
+                    }
+                    value={query}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                      setListOpen(true);
+                      setActiveIndex(-1);
+                    }}
+                    onFocus={() => setListOpen(true)}
+                    onBlur={() => setListOpen(false)}
+                    onKeyDown={handleSearchKeys}
+                    placeholder={t.rsvp.searchPlaceholder}
+                    autoComplete="off"
+                    spellCheck={false}
+                    maxLength={120}
+                    className="min-h-11 w-full rounded-sm border border-terracotta/25 bg-paper/70 px-4 text-base text-ink placeholder:text-muted-foreground"
+                  />
+                  {showList && suggestions && (
+                    <ul
+                      id="rsvp-suggestions"
+                      role="listbox"
+                      aria-label={t.rsvp.suggestionsLabel}
+                      className="absolute inset-x-0 top-full z-20 mt-1 max-h-72 overflow-y-auto rounded-sm border border-terracotta/25 bg-card py-1 shadow-[0_18px_30px_-18px_rgba(36,30,25,0.45)]"
+                    >
+                      {suggestions.items.length ? (
+                        suggestions.items.map((item, index) => (
+                          <li
+                            key={`${item.invite.code}-${item.name}`}
+                            id={`rsvp-suggestion-${index}`}
+                            role="option"
+                            aria-selected={index === activeIndex}
+                            // Evita que o campo perca o foco antes do clique.
+                            onMouseDown={(e) => e.preventDefault()}
+                            onClick={() => chooseSuggestion(item)}
+                            onMouseEnter={() => setActiveIndex(index)}
+                            className={cn(
+                              "cursor-pointer px-4 py-2.5 text-left",
+                              index === activeIndex && "bg-paper-deep",
+                            )}
+                          >
+                            <span className="font-display block text-lg leading-snug text-ink">
+                              {item.name}
+                            </span>
+                            {item.invite.title !== item.name && (
+                              <span className="block text-xs text-muted-foreground">
+                                {item.invite.title}
+                              </span>
+                            )}
+                          </li>
+                        ))
+                      ) : (
+                        <li
+                          role="option"
+                          aria-selected={false}
+                          aria-disabled
+                          className={cn(
+                            "px-4 py-2.5 text-sm",
+                            suggestions.failed ? "text-destructive" : "text-muted-foreground",
+                          )}
+                        >
+                          {suggestions.failed ? t.rsvp.loadError : t.rsvp.noSuggestions}
+                        </li>
+                      )}
+                    </ul>
+                  )}
+                </div>
                 <button
                   type="submit"
                   disabled={status === "searching"}
@@ -329,7 +460,7 @@ export function Rsvp() {
                 )}
               >
                 {status === "short"
-                  ? t.rsvp.needFullName
+                  ? t.rsvp.tooShort
                   : status === "empty"
                     ? t.rsvp.noResults
                     : status === "link-missing"

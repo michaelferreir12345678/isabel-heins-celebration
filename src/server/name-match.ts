@@ -63,6 +63,43 @@ function matchWord(query: string, name: string): WordMatch {
   return null;
 }
 
+/**
+ * Pontuação para as sugestões enquanto a pessoa digita (0 = não sugerir).
+ * Cada palavra digitada precisa ser o começo de uma palavra diferente do nome
+ * ("bea fir" → Beatriz Firmeza), aceitando um erro de digitação a partir de 5 letras.
+ * Quem começa pelo primeiro nome aparece antes.
+ */
+export function suggestionScore(queryWords: string[], nameWords: string[]) {
+  if (!queryWords.length) return 0;
+  const available = nameWords.map((word, index) => ({ word, index }));
+  let score = 0;
+
+  for (const query of queryWords) {
+    let bestPosition = -1;
+    let bestPoints = 0;
+    for (const [position, { word }] of available.entries()) {
+      let points = 0;
+      if (word === query) points = 3;
+      else if (word.startsWith(query)) points = 2;
+      else if (
+        query.length >= MIN_FUZZY_LENGTH &&
+        (withinOneEdit(query, word) || withinOneEdit(query, word.slice(0, query.length)))
+      ) {
+        points = 1;
+      }
+      if (points > bestPoints) {
+        bestPoints = points;
+        bestPosition = position;
+        if (points === 3) break;
+      }
+    }
+    if (!bestPoints) return 0;
+    const [matched] = available.splice(bestPosition, 1);
+    score += bestPoints + (matched?.index === 0 ? 1 : 0);
+  }
+  return score;
+}
+
 /** Pontuação da semelhança (0 = não é a pessoa). Quanto maior, melhor. */
 export function nameMatchScore(queryWords: string[], nameWords: string[]) {
   const available = [...nameWords];

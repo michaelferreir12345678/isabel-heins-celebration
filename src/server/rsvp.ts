@@ -5,18 +5,20 @@
 import { rsvp as rsvpConfig } from "@/data/site";
 import {
   RSVP_TIME_ZONE,
+  hasEnoughLetters,
   isRsvpClosed,
   nameWords,
   normalizeCode,
   type RsvpInvite,
   type RsvpResult,
   type RsvpSubmission,
+  type RsvpSuggestion,
 } from "@/lib/rsvp";
 
 import { createDemoStore } from "./demo-guests";
 import { sheetsConfigFromEnv } from "./google-sheets.ts";
 import { createGuestSheet, type SaveResponseInput } from "./guest-sheet.ts";
-import { nameMatchScore } from "./name-match.ts";
+import { nameMatchScore, suggestionScore } from "./name-match.ts";
 
 type Store = {
   loadInvites(): Promise<RsvpInvite[]>;
@@ -62,26 +64,47 @@ async function allInvites() {
   return invites;
 }
 
+const MAX_RESULTS = 5;
+
 /**
- * Busca por nome e sobrenome, tolerante a nomes do meio e pequenos erros
- * (regras em name-match.ts). Palavras soltas não bastam, para proteger a lista.
+ * Convidados que combinam com o que foi digitado, do mais parecido para o menos.
+ * Vale o começo das palavras ("bea fir") e o nome completo com pequenos erros
+ * (regras em name-match.ts).
  */
-export async function searchInvites(query: string): Promise<RsvpInvite[]> {
+async function rankGuests(query: string) {
+  if (!hasEnoughLetters(query)) return [];
   const words = nameWords(query);
-  if (words.length < 2) return [];
-  const invites = await allInvites();
-  return invites
-    .map((invite) => ({
-      invite,
-      score: Math.max(
-        0,
-        ...invite.members.map((member) => nameMatchScore(words, nameWords(member.name))),
-      ),
-    }))
-    .filter(({ score }) => score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5)
-    .map(({ invite }) => invite);
+  const matches: { score: number; suggestion: RsvpSuggestion }[] = [];
+  for (const invite of await allInvites()) {
+    for (const member of invite.members) {
+      const memberWords = nameWords(member.name);
+      const score = Math.max(
+        suggestionScore(words, memberWords),
+        nameMatchScore(words, memberWords),
+      );
+      if (score > 0) matches.push({ score, suggestion: { name: member.name, invite } });
+    }
+  }
+  return matches
+    .sort(
+      (a, b) => b.score - a.score || a.suggestion.name.localeCompare(b.suggestion.name, "pt-BR"),
+    )
+    .map(({ suggestion }) => suggestion);
+}
+
+/** Nomes para a lista suspensa enquanto a pessoa digita. */
+export async function suggestGuests(query: string): Promise<RsvpSuggestion[]> {
+  return (await rankGuests(query)).slice(0, MAX_RESULTS);
+}
+
+/** Convites encontrados ao apertar "Buscar". */
+export async function searchInvites(query: string): Promise<RsvpInvite[]> {
+  const invites = new Map<string, RsvpInvite>();
+  for (const { invite } of await rankGuests(query)) {
+    if (!invites.has(invite.code)) invites.set(invite.code, invite);
+    if (invites.size === MAX_RESULTS) break;
+  }
+  return [...invites.values()];
 }
 
 export async function findInvite(code: string): Promise<RsvpInvite | null> {

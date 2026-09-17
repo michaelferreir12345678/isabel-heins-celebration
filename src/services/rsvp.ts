@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-import { findInvite, searchInvites, submitRsvp } from "@/server/rsvp";
+import { findInvite, searchInvites, submitRsvp, suggestGuests } from "@/server/rsvp";
 
 /**
  * Funções de servidor da confirmação de presença. O navegador só recebe o convite
@@ -19,6 +19,10 @@ async function safely<T>(action: () => Promise<T>): Promise<T> {
     throw new Error("rsvp-unavailable");
   }
 }
+
+export const suggestGuestsFn = createServerFn({ method: "POST" })
+  .validator(z.object({ query: z.string().max(120) }))
+  .handler(({ data }) => safely(() => suggestGuests(data.query)));
 
 export const searchInvitesFn = createServerFn({ method: "POST" })
   .validator(z.object({ query: z.string().max(120) }))

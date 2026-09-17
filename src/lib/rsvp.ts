@@ -19,6 +19,9 @@ export type RsvpInvite = {
   respondedAt: string | null;
 };
 
+/** Nome sugerido enquanto a pessoa digita, com o convite ao qual pertence. */
+export type RsvpSuggestion = { name: string; invite: RsvpInvite };
+
 export type RsvpAnswer = { memberId: string; attending: boolean };
 
 export type RsvpSubmission = {
@@ -56,6 +59,13 @@ export function nameWords(value: string) {
   return normalizeText(value)
     .split(/[^a-z0-9]+/)
     .filter((word) => word.length > 0 && !NAME_CONNECTORS.has(word));
+}
+
+/** Letras mínimas para buscar (sem contar espaços, "da", "de" etc.). */
+export const MIN_SEARCH_LETTERS = 3;
+
+export function hasEnoughLetters(query: string) {
+  return nameWords(query).join("").length >= MIN_SEARCH_LETTERS;
 }
 
 export function isRsvpClosed(deadline: string, now = Date.now()) {

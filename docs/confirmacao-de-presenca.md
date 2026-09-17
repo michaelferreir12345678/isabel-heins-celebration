@@ -2,7 +2,9 @@
 
 O site guarda a lista de convidados e as respostas numa planilha do Google.
 Os convidados encontram o convite pelo link personalizado (enviado pelo WhatsApp)
-ou buscando nome e sobrenome. A lista completa nunca é enviada para o navegador.
+ou começando a digitar o nome: a partir de 3 letras aparece uma lista com até 5
+sugestões. Por causa dessas sugestões, quem visita o site consegue ver nomes da lista
+de convidados; as credenciais e a planilha em si continuam só no servidor.
 
 Para funcionar, são 4 coisas: a planilha, um "robô" do Google (conta de serviço) com
 permissão para editar essa planilha, as credenciais desse robô no projeto e na Vercel,
