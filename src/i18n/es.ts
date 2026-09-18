@@ -136,7 +136,7 @@ export const es: Dictionary = {
     venueName: "Buffet Le Jardin",
     venueAddress: "Rua General Castelo Branco, 88, Cidade dos Funcionários, Fortaleza - CE",
     dressLabel: "Tenida",
-    dressValue: "Formal elegante",
+    dressValue: "Semiformal",
     dressNote: "En Fortaleza hace calor todo el año, así que conviene elegir telas livianas.",
     maps: "Abrir en Google Maps",
   },
