@@ -31,7 +31,7 @@ export type RsvpSubmission = {
   lang: "pt" | "es";
 };
 
-export type RsvpResult = { ok: true } | { ok: false; reason: "closed" | "not-found" };
+export type RsvpResult = { ok: true } | { ok: false; reason: "not-found" };
 
 export const RSVP_TIME_ZONE = "America/Fortaleza";
 
@@ -66,20 +66,4 @@ export const MIN_SEARCH_LETTERS = 3;
 
 export function hasEnoughLetters(query: string) {
   return nameWords(query).join("").length >= MIN_SEARCH_LETTERS;
-}
-
-export function isRsvpClosed(deadline: string, now = Date.now()) {
-  return now > new Date(deadline).getTime();
-}
-
-/** Dia e nome do mês do prazo, no fuso de Fortaleza. */
-export function deadlineParts(deadline: string, locale: string) {
-  const date = new Date(deadline);
-  const day = Number(
-    new Intl.DateTimeFormat("en-US", { day: "numeric", timeZone: RSVP_TIME_ZONE }).format(date),
-  );
-  const month = new Intl.DateTimeFormat(locale, { month: "long", timeZone: RSVP_TIME_ZONE }).format(
-    date,
-  );
-  return { day, month };
 }

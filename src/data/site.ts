@@ -12,11 +12,6 @@ export const event = {
     ),
 } as const;
 
-export const rsvp = {
-  /** Último momento para confirmar presença (horário de Fortaleza). Depois disso o formulário fecha. */
-  deadline: "2026-09-23T23:59:59-03:00",
-} as const;
-
 export const payment = {
   brazil: {
     pixKey: "06321365378",

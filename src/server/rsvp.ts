@@ -2,11 +2,9 @@
  * Regras da confirmação de presença no servidor: onde os dados ficam,
  * busca por nome, abertura pelo link e gravação das respostas.
  */
-import { rsvp as rsvpConfig } from "@/data/site";
 import {
   RSVP_TIME_ZONE,
   hasEnoughLetters,
-  isRsvpClosed,
   nameWords,
   normalizeCode,
   type RsvpInvite,
@@ -123,7 +121,6 @@ const timestampFormat = new Intl.DateTimeFormat("pt-BR", {
 });
 
 export async function submitRsvp(submission: RsvpSubmission): Promise<RsvpResult> {
-  if (isRsvpClosed(rsvpConfig.deadline)) return { ok: false, reason: "closed" };
   const saved = await getStore().saveResponse({
     ...submission,
     code: normalizeCode(submission.code),

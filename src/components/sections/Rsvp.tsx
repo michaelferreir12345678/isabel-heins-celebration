@@ -2,15 +2,8 @@ import { useEffect, useState, type FormEvent, type KeyboardEvent } from "react";
 import { Check, Heart, Search, X } from "lucide-react";
 
 import { Section } from "@/components/Section";
-import { rsvp as rsvpConfig } from "@/data/site";
 import { useI18n } from "@/i18n";
-import {
-  deadlineParts,
-  hasEnoughLetters,
-  isRsvpClosed,
-  type RsvpInvite,
-  type RsvpSuggestion,
-} from "@/lib/rsvp";
+import { hasEnoughLetters, type RsvpInvite, type RsvpSuggestion } from "@/lib/rsvp";
 import { cn } from "@/lib/utils";
 import { getInviteFn, searchInvitesFn, submitRsvpFn, suggestGuestsFn } from "@/services/rsvp";
 
@@ -26,7 +19,6 @@ type Status =
   | "form"
   | "sending"
   | "error"
-  | "closed"
   | "done";
 
 type Answers = Record<string, boolean | undefined>;
@@ -68,9 +60,7 @@ function useSuggestions(query: string) {
 
 export function Rsvp() {
   const { t, lang } = useI18n();
-  const [status, setStatus] = useState<Status>(() =>
-    isRsvpClosed(rsvpConfig.deadline) ? "closed" : "idle",
-  );
+  const [status, setStatus] = useState<Status>("idle");
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<RsvpInvite[]>([]);
   const [invite, setInvite] = useState<RsvpInvite | null>(null);
@@ -83,12 +73,10 @@ export function Rsvp() {
   const suggestions = useSuggestions(query);
   const showList = listOpen && suggestions !== null;
 
-  const deadline = deadlineParts(rsvpConfig.deadline, lang === "es" ? "es-CL" : "pt-BR");
-
   // Quem chega pelo link personalizado (?convite=CODIGO) já vê o próprio convite.
   useEffect(() => {
     const code = new URLSearchParams(window.location.search).get("convite");
-    if (!code || isRsvpClosed(rsvpConfig.deadline)) return;
+    if (!code) return;
     let cancelled = false;
     setStatus("opening");
     getInviteFn({ data: { code } })
@@ -189,7 +177,7 @@ export function Rsvp() {
         setMessage("");
         setStatus("done");
       } else {
-        setStatus(result.reason === "closed" ? "closed" : "error");
+        setStatus("error");
       }
     } catch {
       setStatus("error");
@@ -207,13 +195,7 @@ export function Rsvp() {
   return (
     <Section id="presenca" kicker={t.rsvp.kicker} title={t.rsvp.title} subtitle={t.rsvp.subtitle}>
       <div className="mx-auto max-w-2xl rounded-sm border border-terracotta/20 bg-card p-6 sm:p-10">
-        {status === "closed" ? (
-          <div className="text-center">
-            <Heart className="mx-auto size-7 text-terracotta" aria-hidden />
-            <h3 className="font-display mt-4 text-3xl text-ink">{t.rsvp.closedTitle}</h3>
-            <p className="mt-3 text-muted-foreground">{t.rsvp.closedBody}</p>
-          </div>
-        ) : status === "done" && invite ? (
+        {status === "done" && invite ? (
           <div className="text-center" role="status">
             <Heart className="mx-auto size-7 text-terracotta" aria-hidden />
             <h3 className="font-display mt-4 text-3xl text-ink">
@@ -239,13 +221,9 @@ export function Rsvp() {
             <div className="text-center">
               <p className="kicker">{invite.title}</p>
               <h3 className="font-display mt-2 text-2xl text-ink">{t.rsvp.membersTitle}</h3>
-              {invite.respondedAt && !submitted ? (
+              {invite.respondedAt && !submitted && (
                 <p className="mt-2 text-sm text-muted-foreground">
                   {t.rsvp.alreadyAnswered(invite.respondedAt)}
-                </p>
-              ) : (
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {t.rsvp.deadline(deadline.day, deadline.month)}
                 </p>
               )}
             </div>
@@ -363,9 +341,6 @@ export function Rsvp() {
           </form>
         ) : (
           <div className="space-y-6">
-            <p className="text-center text-sm text-muted-foreground">
-              {t.rsvp.deadline(deadline.day, deadline.month)}
-            </p>
             <form onSubmit={handleSearch} className="space-y-3">
               <label htmlFor="rsvp-search" className="kicker block">
                 {t.rsvp.searchLabel}

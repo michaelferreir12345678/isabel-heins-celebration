@@ -141,7 +141,6 @@ export const pt = {
     kicker: "Presença",
     title: "Confirmação de presença",
     subtitle: "Use o link que enviamos pelo WhatsApp ou comece a digitar seu nome abaixo.",
-    deadline: (day: number, month: string) => `Confirme até ${day === 1 ? "1º" : day} de ${month}.`,
     searchLabel: "Digite seu nome",
     searchPlaceholder: "Comece a digitar, ex.: Maria",
     searchButton: "Buscar convite",
@@ -174,9 +173,6 @@ export const pt = {
     again: "Alterar resposta",
     error: "Não foi possível registrar agora. Tente novamente em instantes.",
     loadError: "Não foi possível carregar agora. Tente novamente em instantes.",
-    closedTitle: "Confirmações encerradas",
-    closedBody:
-      "O prazo para confirmar terminou. Se precisar, fale diretamente com a Isabel ou o Heins.",
     guestsCount: (n: number) => (n === 1 ? "1 convidado" : `${n} convidados`),
   },
   gifts: {

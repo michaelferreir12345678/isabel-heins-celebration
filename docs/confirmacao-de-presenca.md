@@ -116,11 +116,6 @@ As respostas também ficam registradas, com data e hora, na aba **Respostas**
    Em `GOOGLE_PRIVATE_KEY`, cole o valor sem as aspas.
 3. Faça o deploy. O build já se ajusta sozinho para a Vercel.
 
-## Prazo para confirmar
-
-O prazo fica em `src/data/site.ts` (`rsvp.deadline`). Depois dele, o site mostra
-que as confirmações foram encerradas e não aceita novas respostas.
-
 ## Testar sem planilha
 
 Sem as variáveis do Google, o `npm run dev` usa convidados de demonstração.

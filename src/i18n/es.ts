@@ -144,7 +144,6 @@ export const es: Dictionary = {
     kicker: "Asistencia",
     title: "Confirmación de asistencia",
     subtitle: "Usa el link que te enviamos por WhatsApp o empieza a escribir tu nombre aquí abajo.",
-    deadline: (day: number, month: string) => `Confirma hasta el ${day} de ${month}.`,
     searchLabel: "Escribe tu nombre",
     searchPlaceholder: "Empieza a escribir, ej.: María",
     searchButton: "Buscar invitación",
@@ -177,9 +176,6 @@ export const es: Dictionary = {
     again: "Cambiar respuesta",
     error: "No pudimos registrarlo ahora. Inténtalo de nuevo en un momento.",
     loadError: "No pudimos cargarlo ahora. Inténtalo de nuevo en un momento.",
-    closedTitle: "Confirmaciones cerradas",
-    closedBody:
-      "El plazo para confirmar terminó. Si lo necesitas, escríbele directamente a Isabel o a Heins.",
     guestsCount: (n: number) => (n === 1 ? "1 invitado" : `${n} invitados`),
   },
   gifts: {
